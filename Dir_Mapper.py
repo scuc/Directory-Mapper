@@ -15,17 +15,13 @@ def get_stats(*args):
     '''
     get the last accessed date and file size for the given path
     '''
-
-    # print("ARGS: " + str(args))
     path = Path(args[0])
-    # print("PATH: " + str(path))
     last_access = path.stat().st_atime
     timezone = pytz.timezone('US/Eastern')
     accs_date = datetime.fromtimestamp(last_access, timezone)
 
     filesize_byte = path.stat().st_size
     filesize_gigabyte = filesize_byte/1000000000
-    print("SIZE: " + str(filesize_gigabyte))
 
     return accs_date, filesize_gigabyte
 
@@ -44,26 +40,12 @@ def write_path_to_csv(*args):
     else:
         filesize_str = str(round(filesize_gigabyte,2))
 
-    print(accs_date)
-    print(datetime_str)
-    print(filesize_str)
-
     filename = "paths_w_access_date_" + datetime_str + ".csv"
 
     with open(filename, 'a', newline='') as csvfile:
         fieldnames = ["File_Path", "Last_Accessed", "File_Size_[Gig]"]
         writer = csv.writer(csvfile, delimiter=',', quotechar="'")
         writer.writerow((args[0], accs_date, filesize_str))
-
-    # with open(filename, 'a', newline='') as csvfile:
-    #     fieldnames = ["File_Path", "Last_Accessed", "File_Size_[Gig]"]
-    #     reader = csv.reader(csvfile, delimiter=' ')
-    #     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    #     writer.writeheader()
-    #     # csvwriter = csv.writer(csvfile, delimiter=',', quotechar="'")
-    #     writer.writerow({"File_Path": args[0], "Last_Accessed":accs_date,
-    #         "File_Size_[Gig]":filesize_str})
-
 
 def build_dir_map(startpath):
     '''
@@ -91,7 +73,6 @@ def build_dir_map(startpath):
             else:
                 fpath = f"{subindent}{f}\n"
                 file.write(fpath)
-                print(fpath)
                 file_path = dir_path + f
                 write_path_to_csv(file_path, datetime_str)
 
