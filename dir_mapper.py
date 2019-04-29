@@ -8,7 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from time import strftime
 
-startpath = Path("/Volumes/Quantum2/Vantage_Watch_Quantum2/")
+startpath = Path("/Users/stevenc/Desktop/test_files/")
+# startpath = Path("/Users/stevencucolo/Desktop/Recent_Pictures")
 
 
 def get_stats(*args):
@@ -55,23 +56,42 @@ def build_dir_map(startpath):
     datetime_now = datetime.now()
     datetime_str = datetime_now.strftime("%Y%m%d")
     filename = "dir_map_" + datetime_str + '.txt'
-    file = open(filename, 'a')
+
+    file = open(filename, 'w')
+    file.write(str(startpath) + "\n")
 
     for root, dirs, files in os.walk(startpath):
         dir_path = root + "/"
         write_path_to_csv(dir_path, datetime_str)
 
         level = root.replace(str(startpath), '').count(os.sep)
-        indent = ' ' * 4 * (level)
-        map_path = f"{indent}{os.path.basename(root)}/\n"
-        file.write(map_path)
-        subindent = ' ' * 4 * (level + 1)
+
+        if level == 0:
+            pass
+        elif level == 1:
+            line = "___" + " "
+            map_path = f"|{line}{os.path.basename(root)}/\n"
+            file.write("|\n")
+            file.write(map_path)
+        else:
+            print("LEVEL: " + str(level))
+            line = "|___" + " "
+            indent = ' ' * 4 * (level)
+            map_path = f"|{indent[:-3]}{line}{os.path.basename(root)}/\n"
+            file.write(map_path)
 
         for f in files:
             if f.startswith("."):
                 pass
+            elif level == 1:
+                line = "|___" + " "
+                subindent = ' ' * 4 * (level) + " "*level
+                fpath = f"|{subindent}{line}{f}\n"
+                file.write(fpath)
             else:
-                fpath = f"{subindent}{f}\n"
+                line = "|___" + " "
+                subindent = ' ' * 4 * (level) + "  "
+                fpath = f"|{subindent}{line}{f}\n"
                 file.write(fpath)
                 file_path = dir_path + f
                 write_path_to_csv(file_path, datetime_str)
