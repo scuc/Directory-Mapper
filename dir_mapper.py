@@ -8,8 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from time import strftime
 
-startpath = Path("/Users/stevenc/Desktop/test_files/")
-# startpath = Path("/Users/stevencucolo/Desktop/Recent_Pictures")
+# startpath = Path("/Users/stevenc/Desktop/test_files/")
+startpath = Path("/Users/stevenc/Documents/")
 
 
 def get_stats(*args):
@@ -69,15 +69,14 @@ def build_dir_map(startpath):
         if level == 0:
             pass
         elif level == 1:
-            line = "___" + " "
-            map_path = f"|{line}{os.path.basename(root)}/\n"
+            line = "|___" + " "
+            map_path = f"{line}{os.path.basename(root)}/\n"
             file.write("|\n")
             file.write(map_path)
         else:
-            print("LEVEL: " + str(level))
             line = "|___" + " "
             indent = ' ' * 4 * (level)
-            map_path = f"|{indent[:-3]}{line}{os.path.basename(root)}/\n"
+            map_path = f"|{indent[:-2]}{line}{os.path.basename(root)}/\n"
             file.write(map_path)
 
         for f in files:
